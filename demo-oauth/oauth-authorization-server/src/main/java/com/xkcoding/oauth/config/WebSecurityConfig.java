@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@org.springframework.context.annotation.PropertySource("classpath:platform.properties")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final ClientLogoutSuccessHandler clientLogoutSuccessHandler;
@@ -24,7 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/oauth/login").failureHandler(clientLoginFailureHandler).loginProcessingUrl("/authorization/form").and().logout().logoutUrl("/oauth/logout").logoutSuccessHandler(clientLogoutSuccessHandler).and().authorizeRequests().antMatchers("/oauth/**").permitAll().anyRequest().authenticated();
+        http.formLogin().loginPage("/oauth/login").failureHandler(clientLoginFailureHandler).loginProcessingUrl("/authorization/form").and().logout().logoutUrl("/oauth/logout").logoutSuccessHandler(clientLogoutSuccessHandler).and().authorizeRequests().requestMatchers(org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest.toAnyEndpoint().excluding("info")).permitAll().antMatchers("/oauth/**").permitAll().anyRequest().authenticated();
     }
 
     /**
